@@ -1,3 +1,0 @@
-<launch>
-    <node pkg="actions_quiz" type="test.py" name="actions_quiz" output="screen" />
-</launch>
