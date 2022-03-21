@@ -1,0 +1,129 @@
+# Publish all joint states -----------------------------------
+# Creates the /joint_states topic necessary in ROS
+joint_state_controller:
+  type: joint_state_controller/JointStateController
+  publish_rate: 50  
+
+# Effort Controllers ---------------------------------------
+column_1_roll_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: column_1_roll_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+column_2_roll_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: column_2_roll_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+column_3_roll_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: column_3_roll_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+column_4_roll_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: column_4_roll_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+column_5_roll_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: column_5_roll_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+column_6_roll_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: column_6_roll_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+column_7_roll_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: column_7_roll_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+column_8_roll_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: column_8_roll_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+
+column_1_pitch_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: column_1_pitch_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+column_2_pitch_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: column_2_pitch_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+column_3_pitch_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: column_3_pitch_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+column_4_pitch_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: column_4_pitch_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+column_5_pitch_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: column_5_pitch_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+column_6_pitch_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: column_6_pitch_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+column_7_pitch_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: column_7_pitch_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+column_8_pitch_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: column_8_pitch_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+
+column_1_yaw_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: column_1_yaw_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+column_2_yaw_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: column_2_yaw_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+column_3_yaw_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: column_3_yaw_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+column_4_yaw_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: column_4_yaw_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+column_5_yaw_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: column_5_yaw_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+column_6_yaw_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: column_6_yaw_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+column_7_yaw_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: column_7_yaw_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+column_8_yaw_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: column_8_yaw_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+
+neck_1_yaw_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: neck_1_yaw_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+neck_2_yaw_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: neck_2_yaw_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+neck_3_yaw_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: neck_3_yaw_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+neck_4_yaw_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: neck_4_yaw_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+neck_5_yaw_joint_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: neck_5_yaw_joint
+  pid: {p: 10.0, i: 0.0, d: 0.0}
+
+
+    

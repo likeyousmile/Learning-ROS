@@ -1,0 +1,50 @@
+<launch>
+
+    <arg name="robot_name" default="boxhuman1"/>
+
+    <group ns="$(arg robot_name)">
+
+        <rosparam file="$(find box_human_description)/config/box_human.yaml"
+            command="load"/>
+
+        <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+        output="screen" args="joint_state_controller 
+                                column_1_roll_joint_position_controller
+                                column_2_roll_joint_position_controller
+                                column_3_roll_joint_position_controller
+                                column_4_roll_joint_position_controller
+                                column_5_roll_joint_position_controller
+                                column_6_roll_joint_position_controller
+                                column_7_roll_joint_position_controller
+                                column_8_roll_joint_position_controller
+                                column_1_pitch_joint_position_controller
+                                column_2_pitch_joint_position_controller
+                                column_3_pitch_joint_position_controller
+                                column_4_pitch_joint_position_controller
+                                column_5_pitch_joint_position_controller
+                                column_6_pitch_joint_position_controller
+                                column_7_pitch_joint_position_controller
+                                column_8_pitch_joint_position_controller
+                                column_1_yaw_joint_position_controller
+                                column_2_yaw_joint_position_controller
+                                column_3_yaw_joint_position_controller
+                                column_4_yaw_joint_position_controller
+                                column_5_yaw_joint_position_controller
+                                column_6_yaw_joint_position_controller
+                                column_7_yaw_joint_position_controller
+                                column_8_yaw_joint_position_controller
+                                neck_1_yaw_joint_position_controller
+                                neck_2_yaw_joint_position_controller
+                                neck_3_yaw_joint_position_controller
+                                neck_4_yaw_joint_position_controller
+                                neck_5_yaw_joint_position_controller
+                            ">
+        </node>
+
+
+    </group>
+
+    
+	
+ 		  
+</launch>

@@ -1,0 +1,14 @@
+<launch>
+    <node pkg="tf" type="static_transform_publisher" name="node_static_tranform_box_bot_1_to_box_bot_2" 
+          args="0 0 0 0 0 0 box_bot_1/odom box_bot_2/odom 100">
+    </node>
+
+    <node pkg="tf" type="static_transform_publisher" name="node_static_tranform_box_bot_2_to_box_bot_3" 
+          args="0 0 0 0 0 0 box_bot_2/odom box_bot_3/odom 100">
+    </node>
+
+    <!-- Show in Rviz   -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find tf_static_transform)/rviz/base.rviz"/>
+
+
+</launch>

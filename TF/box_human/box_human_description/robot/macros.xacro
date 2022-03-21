@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:macro  name="cylinder_inertia" params="mass r l">
+      <inertia  ixx="${mass*(3*r*r+l*l)/12}" ixy = "0" ixz = "0"
+                iyy="${mass*(3*r*r+l*l)/12}" iyz = "0"
+                izz="${mass*(r*r)/2}" />
+    </xacro:macro >
+
+    <xacro:macro name="box_inertia" params="mass x y z">
+      <inertia  ixx="${mass*(y*y+z*z)/12}" ixy = "0" ixz = "0"
+                iyy="${mass*(x*x+z*z)/12}" iyz = "0"
+                izz="${mass*(x*x+z*z)/12}"
+      />
+    </xacro:macro>
+
+  <xacro:macro name="sphere_inertia" params="mass r">
+    <inertia  
+          ixx="${2*mass*r*r/5}" ixy = "0" ixz = "0"
+          iyy="${2*mass*r*r/5}" iyz = "0"
+          izz="${2*mass*r*r/5}"
+    />
+  </xacro:macro>  
+
+  <xacro:macro name="spheric_articulation" params="x_pos y_pos z_pos joint_id parent disc_size roll_lim_up roll_lim_down pitch_lim_up pitch_lim_down">
+      
+      <!-- ROLL Left/Right Movement-->
+      <joint name="${joint_id}_roll_joint" type="revolute">
+        <parent link="${parent}"/>
+        <child link="${joint_id}_roll_link"/>
+        <origin xyz="${x_pos} ${y_pos} ${z_pos}" rpy="0 0 0"/>
+        <axis xyz="1 0 0"/>
+        <limit lower="${roll_lim_down}" upper="${roll_lim_up}" effort="${flex_joint_effort}" velocity="${flex_joint_vel}"/>
+      </joint>
+
+      <link name="${joint_id}_roll_link">
+        <inertial>
+          <mass value="${flex_link_mass / PHI3}"/>
+          <origin rpy="0 0 0" xyz="0 0 0"/>
+          <xacro:cylinder_inertia mass="${flex_link_mass / PHI3}" r="${disc_size}" l="${disc_size / PHI3}"/>
+        </inertial>
+        <collision name="collision_${joint_id}_roll_link">
+          <geometry>
+            <cylinder radius="${disc_size}" length="${disc_size / PHI3}"/>
+          </geometry>
+        </collision>
+        <visual name="visual_${joint_id}_roll_link">
+          <geometry>
+            <cylinder radius="${disc_size}" length="${disc_size / PHI3}"/>
+          </geometry>
+        </visual>
+      </link>
+
+
+      <transmission name="${joint_id}_joint_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="${joint_id}_roll_joint">
+          <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="${joint_id}_roll_joint_Motor">
+          <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+          <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+      </transmission>
+
+      <!-- PITCH Forwards/Backwards Movement-->
+      <joint name="${joint_id}_pitch_joint" type="revolute">
+        <parent link="${joint_id}_roll_link"/>
+        <child link="${joint_id}_pitch_link"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <limit lower="${pitch_lim_down}" upper="${pitch_lim_up}" effort="${flex_joint_effort}" velocity="${flex_joint_vel}"/>
+      </joint>
+
+      <link name="${joint_id}_pitch_link">
+        <inertial>
+          <mass value="${flex_link_mass / PHI3}"/>
+          <origin rpy="0 0 0" xyz="0 0 0"/>
+          <xacro:cylinder_inertia mass="${flex_link_mass / PHI3}" r="${disc_size}" l="${disc_size / PHI3}"/>
+        </inertial>
+        <collision name="collision_${joint_id}_pitch_link">
+          <geometry>
+            <cylinder radius="${disc_size}" length="${disc_size / PHI3}"/>
+          </geometry>
+        </collision>
+        <visual name="visual_${joint_id}_pitch_link">
+          <geometry>
+            <cylinder radius="${disc_size}" length="${disc_size / PHI3}"/>
+          </geometry>
+        </visual>
+      </link>
+
+
+      <transmission name="${joint_id}_joint_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="${joint_id}_pitch_joint">
+          <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="${joint_id}_pitch_joint_Motor">
+          <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+          <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+      </transmission>
+
+      
+
+  </xacro:macro>  
+
+</robot>

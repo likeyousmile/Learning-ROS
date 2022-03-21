@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+  <xacro:macro  name="leg" params="parent leg_side">
+
+      <joint name="${leg_side}_thigh_joint" type="revolute">
+        <parent link="${parent}"/>
+        <child link="${leg_side}_thigh_link"/>
+        <limit lower="${thigh_link_lim_down}" upper="${thigh_link_lim_up}" effort="${thigh_max_effort}" velocity="${thigh_max_vel}"/>
+        <origin xyz="0 0 ${(-1.0*thigh_link_length/2.0) - (thigh_link_radius / PHI3)}" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+      </joint>
+
+      <transmission name="${leg_side}_thigh_joint_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${leg_side}_thigh_joint">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${leg_side}_thigh_joint_Motor">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+
+      <link name="${leg_side}_thigh_link">        
+        <inertial>        
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <mass value="${thigh_link_mass}"/>
+          <origin rpy="0 0 0" xyz="0 0 0"/>
+          <xacro:cylinder_inertia mass="${thigh_link_mass}" r="${thigh_link_radius}" l="${thigh_link_length}"/>
+        </inertial>
+        <collision name="collision_${leg_side}_thigh_link">
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <cylinder radius="${thigh_link_radius}" length="${thigh_link_length}"/>
+          </geometry>
+        </collision>
+        <visual name="visual_${leg_side}_thigh_link">
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+              <cylinder radius="${thigh_link_radius}" length="${thigh_link_length}"/>
+          </geometry>
+        </visual>
+      </link>
+
+      <gazebo reference="${leg_side}_thigh_link">
+        <selfCollide>false</selfCollide>
+      </gazebo>
+
+      <!-- shin Link-->
+      <joint name="${leg_side}_shin_joint" type="revolute">
+        <parent link="${leg_side}_thigh_link"/>
+        <child link="${leg_side}_shin_link"/>
+        <limit lower="${shin_link_lim_down}" upper="${shin_link_lim_up}" effort="${shin_max_effort}" velocity="${shin_max_vel}"/>
+        <origin xyz="0 0 ${(-1.0*thigh_link_length / 2.0)}" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+      </joint>
+
+      <transmission name="${leg_side}_shin_joint_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${leg_side}_shin_joint">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${leg_side}_shin_joint_Motor">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+
+      <link name="${leg_side}_shin_link">        
+        <inertial>        
+           <origin xyz="0 0 ${(-1.0*shin_link_length / 2.0)}" rpy="0 0 0" />
+          <mass value="${shin_link_mass}"/>
+          <origin rpy="0 0 0" xyz="0 0 0"/>
+          <xacro:cylinder_inertia mass="${shin_link_mass}" r="${shin_link_radius}" l="${shin_link_length}"/>
+        </inertial>
+        <collision name="collision_${leg_side}_shin_link">
+          <origin xyz="0 0 ${(-1.0*shin_link_length / 2.0)}" rpy="0 0 0" />
+          <geometry>
+            <cylinder radius="${shin_link_radius}" length="${shin_link_length}"/>
+          </geometry>
+        </collision>
+        <visual name="visual_${leg_side}_shin_link">
+          <origin xyz="0 0 ${(-1.0*shin_link_length / 2.0)}" rpy="0 0 0" />
+          <geometry>
+              <cylinder radius="${shin_link_radius}" length="${shin_link_length}"/>
+          </geometry>
+        </visual>
+      </link>
+
+      <gazebo reference="${leg_side}_shin_link">
+        <selfCollide>false</selfCollide>
+      </gazebo>
+
+  </xacro:macro >
+
+</robot>

@@ -1,0 +1,47 @@
+<?xml version="1.0" ?>
+<robot name="box_human" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find box_human_description)/robot/materials.xacro" />
+  <xacro:include filename="$(find box_human_description)/robot/properties.xacro" />
+  <xacro:include filename="$(find box_human_description)/robot/macros.xacro" />  
+  <xacro:include filename="$(find box_human_description)/robot/box_human.gazebo" />
+  <xacro:include filename="$(find box_human_description)/robot/box_human_flex_joint.xacro" />
+  <xacro:include filename="$(find box_human_description)/robot/box_human_arm.xacro" />
+  <xacro:include filename="$(find box_human_description)/robot/box_human_leg.xacro" />
+  <xacro:include filename="$(find box_human_description)/robot/box_human_head.xacro" />
+  <xacro:include filename="$(find box_human_description)/robot/box_human_hand.xacro" />
+  <xacro:include filename="$(find box_human_description)/robot/box_human_foot.xacro" />
+  <xacro:include filename="$(find box_human_description)/robot/box_human_core.xacro" />
+ 
+  <xacro:arg name="x_pos" default="0.0" />
+  <xacro:arg name="y_pos" default="0.0" />
+  <xacro:arg name="z_pos" default="0.0" />
+  <xacro:arg name="yaw_pos" default="0.0" />
+  <xacro:arg name="robot_name" default="0.0" />
+
+
+  <xacro:box_human_core x="$(arg x_pos)" y="$(arg y_pos)" z="$(arg z_pos)" yaw="$(arg yaw_pos)"/>
+
+  <xacro:spheric_articulation x_pos="${0.0}" y_pos="${(chest_link_y / 2.0) + (1.1*shoulder_link_radius)}" z_pos="${(chest_link_z / 2.0) - (chest_link_z / PHI3)}" joint_id="left_shoulder_spherical" parent="chest_link" disc_size="${shoulder_link_radius}" roll_lim_up="0.7" roll_lim_down="-0.7" pitch_lim_up="0.7" pitch_lim_down="-0.7"/>
+  <xacro:arm parent="left_shoulder_spherical_pitch_link" arm_side="left"/>
+
+  <xacro:spheric_articulation x_pos="${0.0}" y_pos="${-1.0 * ((chest_link_y / 2.0) + (1.1*shoulder_link_radius))}" z_pos="${(chest_link_z / 2.0) - (chest_link_z / PHI3)}" joint_id="right_shoulder_spherical" parent="chest_link" disc_size="${shoulder_link_radius}" roll_lim_up="0.7" roll_lim_down="-0.7" pitch_lim_up="0.7" pitch_lim_down="-0.7"/>
+  <xacro:arm parent="right_shoulder_spherical_pitch_link" arm_side="right"/>
+
+  <xacro:spheric_articulation x_pos="${0.0}" y_pos="${(pelvis_link_y / 2.0) - (1.1*thigh_link_radius)}" z_pos="${(pelvis_link_z / 2.0) - (pelvis_link_z / PHI3)}" joint_id="left_thigh_spherical" parent="pelvis_link" disc_size="${thigh_link_radius}" roll_lim_up="0.1" roll_lim_down="-0.1" pitch_lim_up="0.1" pitch_lim_down="-0.1"/>
+  <xacro:leg parent="left_thigh_spherical_pitch_link" leg_side="left"/>
+
+  <xacro:spheric_articulation x_pos="${0.0}" y_pos="${-1.0 * ((pelvis_link_y / 2.0) - (1.1*thigh_link_radius))}" z_pos="${(pelvis_link_z / 2.0) - (pelvis_link_z / PHI3)}" joint_id="right_thigh_spherical" parent="pelvis_link" disc_size="${thigh_link_radius}" roll_lim_up="0.1" roll_lim_down="-0.1" pitch_lim_up="0.1" pitch_lim_down="-0.1"/>
+  <xacro:leg parent="right_thigh_spherical_pitch_link" leg_side="right"/>
+
+  <xacro:box_human_head/>
+
+  <xacro:hand parent="left_forearm_link" hand_side="left" x_pos="0.0" y_pos="0.0" z_pos="${-1.0*forearm_link_length}" rotation="${PI}"/>
+  <xacro:hand parent="right_forearm_link" hand_side="right" x_pos="0.0" y_pos="0.0" z_pos="${-1.0*forearm_link_length}" rotation="${PI}"/>
+
+  <xacro:foot parent="left_shin_link" foot_side="left" x_pos="0.0" y_pos="0.0" z_pos="${-1.0*shin_link_length}" rotation="${PI}"/>
+  <xacro:foot parent="right_shin_link" foot_side="right" x_pos="0.0" y_pos="0.0" z_pos="${-1.0*shin_link_length}" rotation="${PI}"/>
+
+  <xacro:box_human_control box_human_name="$(arg robot_name)"/>
+
+</robot>

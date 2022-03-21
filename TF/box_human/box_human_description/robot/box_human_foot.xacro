@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+  <xacro:macro  name="foot" params="parent foot_side x_pos y_pos z_pos rotation">
+
+      <joint name="${foot_side}_ankle_yaw_joint" type="revolute">
+        <parent link="${parent}"/>
+        <child link="${foot_side}_ankle_yaw_link"/>
+        <limit lower="${ankle_yaw_link_lim_down}" upper="${ankle_yaw_link_lim_up}" effort="${ankle_yaw_link_max_effort}" velocity="${ankle_yaw_link_max_vel}"/>
+        <origin xyz="${x_pos} ${y_pos} ${z_pos}" rpy="${rotation} 0 0"/>
+        <axis xyz="0 0 1"/>
+      </joint>
+
+      <transmission name="${foot_side}_ankle_yaw_joint_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${foot_side}_ankle_yaw_joint">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${foot_side}_ankle_yaw_joint_Motor">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+
+      <link name="${foot_side}_ankle_yaw_link">        
+        <inertial>        
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <mass value="${ankle_link_mass}"/>
+          <origin rpy="0 0 0" xyz="0 0 0"/>
+          <xacro:cylinder_inertia mass="${ankle_link_mass}" r="${ankle_link_radius}" l="${ankle_link_length}"/>
+        </inertial>
+        <collision name="collision_${foot_side}_ankle_link">
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <cylinder radius="${ankle_link_radius}" length="${ankle_link_length}"/>
+          </geometry>
+        </collision>
+        <visual name="visual_${foot_side}_ankle_link">
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+              <cylinder radius="${ankle_link_radius}" length="${ankle_link_length}"/>
+          </geometry>
+        </visual>
+      </link>
+
+    <xacro:spheric_articulation x_pos="${0.0}" y_pos="${0.0}" z_pos="${ankle_link_length}" joint_id="${foot_side}_ankle_spherical" parent="${foot_side}_ankle_yaw_link" disc_size="${ankle_link_radius}" roll_lim_up="0.1" roll_lim_down="-0.1" pitch_lim_up="0.1" pitch_lim_down="-0.1"/>
+
+
+    <link name="${foot_side}_foot_link">
+        <inertial>
+            <mass value="${foot_link_mass}"/>
+            <origin xyz="${foot_link_x / 4.0} 0 0" rpy="0 0 0" />
+            <xacro:box_inertia mass="${foot_link_mass}" x="${foot_link_x}" y="${foot_link_y}" z="${foot_link_z}"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="${foot_link_x / 4.0} 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="${foot_link_x}     ${foot_link_y}     ${foot_link_z}"/>
+            </geometry>
+            <material name="green"/>
+        </visual>
+
+        <collision>
+            <origin xyz="${foot_link_x / 4.0} 0 0" rpy="0 0 0" />
+            <geometry>
+                 <box size="${foot_link_x}     ${foot_link_y}     ${foot_link_z}"/>
+            </geometry>
+        </collision>
+
+    </link>
+
+    <joint name="${foot_side}_foot_joint" type="fixed">
+      <parent link="${foot_side}_ankle_spherical_pitch_link"/>
+      <child link="${foot_side}_foot_link"/>
+      <origin xyz="0 0 ${foot_link_z}" rpy="0 0 0"/>
+    </joint>
+
+    <gazebo reference="${foot_side}_foot_link">
+      <kp>${foot_kp}</kp>
+      <kd>${foot_kd}</kd>
+      <mu1>${foot_mu1}</mu1>
+      <mu2>${foot_mu2}</mu2>
+      <selfCollide>true</selfCollide>
+    </gazebo>
+
+  </xacro:macro >
+
+</robot>

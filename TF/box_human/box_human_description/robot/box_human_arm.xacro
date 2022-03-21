@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+  <xacro:macro  name="arm" params="parent arm_side">
+
+      <joint name="${arm_side}_shoulder_joint" type="revolute">
+        <parent link="${parent}"/>
+        <child link="${arm_side}_shoulder_link"/>
+        <limit lower="${shoulder_link_lim_down}" upper="${shoulder_link_lim_up}" effort="${shoulder_max_effort}" velocity="${shoulder_max_vel}"/>
+        <origin xyz="0 0 ${(-1.0*shoulder_link_length/2.0) - (shoulder_link_radius / PHI3)}" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+      </joint>
+
+      <transmission name="${arm_side}_shoulder_joint_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${arm_side}_shoulder_joint">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${arm_side}_shoulder_joint_Motor">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+
+      <link name="${arm_side}_shoulder_link">        
+        <inertial>        
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <mass value="${shoulder_link_mass}"/>
+          <origin rpy="0 0 0" xyz="0 0 0"/>
+          <xacro:cylinder_inertia mass="${shoulder_link_mass}" r="${shoulder_link_radius}" l="${shoulder_link_length}"/>
+        </inertial>
+        <collision name="collision_${arm_side}_shoulder_link">
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <cylinder radius="${shoulder_link_radius}" length="${shoulder_link_length}"/>
+          </geometry>
+        </collision>
+        <visual name="visual_${arm_side}_shoulder_link">
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+              <cylinder radius="${shoulder_link_radius}" length="${shoulder_link_length}"/>
+          </geometry>
+        </visual>
+      </link>
+
+      <!-- Had issues withself collision with the spherical joint-->
+      <gazebo reference="${arm_side}_shoulder_link">
+        <selfCollide>false</selfCollide>
+      </gazebo>
+
+      <!-- Forearm Link-->
+      <joint name="${arm_side}_forearm_joint" type="revolute">
+        <parent link="${arm_side}_shoulder_link"/>
+        <child link="${arm_side}_forearm_link"/>
+        <limit lower="${forearm_link_lim_down}" upper="${forearm_link_lim_up}" effort="${forearm_max_effort}" velocity="${forearm_max_vel}"/>
+        <origin xyz="0 0 ${(-1.0*shoulder_link_length / 2.0)}" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+      </joint>
+
+      <transmission name="${arm_side}_forearm_joint_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${arm_side}_forearm_joint">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${arm_side}_forearm_joint_Motor">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+
+      <link name="${arm_side}_forearm_link">        
+        <inertial>        
+           <origin xyz="0 0 ${(-1.0*forearm_link_length / 2.0)}" rpy="0 0 0" />
+          <mass value="${forearm_link_mass}"/>
+          <origin rpy="0 0 0" xyz="0 0 0"/>
+          <xacro:cylinder_inertia mass="${forearm_link_mass}" r="${forearm_link_radius}" l="${forearm_link_length}"/>
+        </inertial>
+        <collision name="collision_${arm_side}_forearm_link">
+          <origin xyz="0 0 ${(-1.0*forearm_link_length / 2.0)}" rpy="0 0 0" />
+          <geometry>
+            <cylinder radius="${forearm_link_radius}" length="${forearm_link_length}"/>
+          </geometry>
+        </collision>
+        <visual name="visual_${arm_side}_forearm_link">
+          <origin xyz="0 0 ${(-1.0*forearm_link_length / 2.0)}" rpy="0 0 0" />
+          <geometry>
+              <cylinder radius="${forearm_link_radius}" length="${forearm_link_length}"/>
+          </geometry>
+        </visual>
+      </link>
+
+      <gazebo reference="${arm_side}_forearm_link">
+        <selfCollide>true</selfCollide>
+      </gazebo>
+
+  </xacro:macro >
+
+</robot>

@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro  name="box_human_head" params="">
+
+        
+    <xacro:property name="flex_name_for_neck" value="neck"/>
+    <!-- Flexible Neck -->  
+    <xacro:flex_loop parent_name="chest_link" flex_name="${flex_name_for_neck}" parent_link_x="${head_link_r}" parent_link_y="${head_link_r}" parent_link_z="${head_link_r/ PHI3}" items="${flex_neck_indexes}"/>
+
+    <!-- Chest-->
+    <link name="head_link">
+        <inertial>
+            <mass value="${head_link_mass}"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <xacro:sphere_inertia mass="${head_link_mass}" r="${head_link_r}"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <sphere radius="${head_link_r}"/>
+            </geometry>
+            <material name="green"/>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                 <sphere radius="${head_link_r}"/>
+            </geometry>
+        </collision>
+
+    </link>
+
+    <joint name="head_joint" type="fixed">
+      <parent link="${flex_name_for_neck}_5_yaw_link"/>
+      <child link="head_link"/>
+      <origin xyz="0 0 ${head_link_r}" rpy="0 0 0"/>
+    </joint>
+
+  </xacro:macro >
+
+  
+</robot>

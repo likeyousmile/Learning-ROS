@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro  name="box_human_core" params="x y z yaw">
+
+    <link name="world">
+    </link>
+
+    <link name="pelvis_link">
+        <inertial>
+            <mass value="${pelvis_link_mass}"/>
+      <!--COM origin wrt pHipOrigin-->
+            <origin xyz="0 0 0.056125" rpy="0 0 0" />
+            <xacro:box_inertia mass="${pelvis_link_mass}" x="${pelvis_link_x}" y="${pelvis_link_y}" z="${pelvis_link_z}"/>
+        </inertial>
+
+        <visual>
+      <!--box origin wrt pHipOrigin-->
+            <origin xyz="0 0 0.056125" rpy="0 0 0" />
+            <geometry>
+                <box size="${pelvis_link_x}     ${pelvis_link_y}     ${pelvis_link_z}"/>
+            </geometry>
+            <material name="green"/>
+        </visual>
+
+        <collision>
+      <!--box origin wrt pHipOrigin-->
+            <origin xyz="0 0 0.056125" rpy="0 0 0" />
+            <geometry>
+                 <box size="${pelvis_link_x}     ${pelvis_link_y}     ${pelvis_link_z}"/>
+            </geometry>
+        </collision>
+
+    </link>    
+
+    <!-- Link to Pin the robot to the ground-->
+
+    <joint name="base_link_joint" type="fixed">
+      <origin rpy="0 0 ${yaw}" xyz="${x} ${y} ${z}" />
+      <parent link="world" />
+      <child link="pelvis_link" />
+    </joint>
+
+    <!-- Flexible Waist --> 
+    <xacro:property name="flex_name_for_column" value="column"/>
+
+    <xacro:flex_loop parent_name="pelvis_link" flex_name="${flex_name_for_column}" parent_link_x="${pelvis_link_x}" parent_link_y="${pelvis_link_y}" parent_link_z="${pelvis_link_z}" items="${flex_indexes}"/>
+
+    <!-- Chest-->
+    <link name="chest_link">
+        <inertial>
+            <mass value="${chest_link_mass}"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <xacro:box_inertia mass="${chest_link_mass}" x="${chest_link_x}" y="${chest_link_y}" z="${chest_link_z}"/>
+        </inertial>
+
+        <visual>
+      <!--box origin wrt pHipOrigin-->
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="${chest_link_x}     ${chest_link_y}     ${chest_link_z}"/>
+            </geometry>
+            <material name="green"/>
+        </visual>
+
+        <collision>
+      <!--box origin wrt pHipOrigin-->
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                 <box size="${chest_link_x}     ${chest_link_y}     ${chest_link_z}"/>
+            </geometry>
+        </collision>
+
+    </link>
+
+    <joint name="chest_joint" type="fixed">
+      <parent link="${flex_name_for_column}_8_yaw_link"/>
+      <child link="chest_link"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+  </xacro:macro >
+
+  
+</robot>

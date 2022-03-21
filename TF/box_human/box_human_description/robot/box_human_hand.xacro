@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+  <xacro:macro  name="hand" params="parent hand_side x_pos y_pos z_pos rotation">
+
+      <joint name="${hand_side}_wrist_yaw_joint" type="revolute">
+        <parent link="${parent}"/>
+        <child link="${hand_side}_wrist_yaw_link"/>
+        <limit lower="${wrist_yaw_link_lim_down}" upper="${wrist_yaw_link_lim_up}" effort="${wrist_yaw_link_max_effort}" velocity="${wrist_yaw_link_max_vel}"/>
+        <origin xyz="${x_pos} ${y_pos} ${z_pos}" rpy="${rotation} 0 0"/>
+        <axis xyz="0 0 1"/>
+      </joint>
+
+      <transmission name="${hand_side}_wrist_yaw_joint_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${hand_side}_wrist_yaw_joint">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${hand_side}_wrist_yaw_joint_Motor">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+
+      <link name="${hand_side}_wrist_yaw_link">        
+        <inertial>        
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <mass value="${wrist_link_mass}"/>
+          <origin rpy="0 0 0" xyz="0 0 0"/>
+          <xacro:cylinder_inertia mass="${wrist_link_mass}" r="${wrist_link_radius}" l="${wrist_link_length}"/>
+        </inertial>
+        <collision name="collision_${hand_side}_wrist_link">
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <cylinder radius="${wrist_link_radius}" length="${wrist_link_length}"/>
+          </geometry>
+        </collision>
+        <visual name="visual_${hand_side}_wrist_link">
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+              <cylinder radius="${wrist_link_radius}" length="${wrist_link_length}"/>
+          </geometry>
+        </visual>
+      </link>
+
+    <xacro:spheric_articulation x_pos="${0.0}" y_pos="${0.0}" z_pos="${wrist_link_length}" joint_id="${hand_side}_wrist_spherical" parent="${hand_side}_wrist_yaw_link" disc_size="${wrist_link_radius}" roll_lim_up="0.1" roll_lim_down="-0.1" pitch_lim_up="0.1" pitch_lim_down="-0.1"/>
+
+      <!-- Chest-->
+    <link name="${hand_side}_hand_link">
+        <inertial>
+            <mass value="${hand_link_mass}"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <xacro:sphere_inertia mass="${hand_link_mass}" r="${hand_link_r}"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <sphere radius="${hand_link_r}"/>
+            </geometry>
+            <material name="green"/>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                 <sphere radius="${hand_link_r}"/>
+            </geometry>
+        </collision>
+
+    </link>
+
+    <joint name="${hand_side}_hand_joint" type="fixed">
+      <parent link="${hand_side}_wrist_spherical_pitch_link"/>
+      <child link="${hand_side}_hand_link"/>
+      <origin xyz="0 0 ${hand_link_r}" rpy="0 0 0"/>
+    </joint>
+
+    <gazebo reference="${hand_side}_hand_link">
+      <kp>${hand_kp}</kp>
+      <kd>${hand_kp}</kd>
+      <mu1>${hand_mu1}</mu1>
+      <mu2>${hand_mu2}</mu2>
+      <selfCollide>true</selfCollide>
+    </gazebo>
+
+  </xacro:macro >
+
+</robot>

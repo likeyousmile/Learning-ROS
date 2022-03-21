@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- Macro for creating flex Multiple joints-->
+    <xacro:macro  name="box_human_flex_joint" params="parent flex_name flex_id displacement flex_link_x flex_link_y flex_link_z">
+      
+      <!-- ROLL Left/Right Movement-->
+      <joint name="${flex_name}_${flex_id}_roll_joint" type="revolute">
+        <parent link="${parent}"/>
+        <child link="${flex_name}_${flex_id}_roll_link"/>
+        <origin xyz="0 0 ${displacement}" rpy="0 0 0"/>
+        <axis xyz="1 0 0"/>
+        <limit lower="${flex_joint_lim_roll_low}" upper="${flex_joint_lim_roll_up}" effort="${flex_joint_effort}" velocity="${flex_joint_vel}"/>
+      </joint>
+
+      <link name="${flex_name}_${flex_id}_roll_link">
+        <inertial>
+          <mass value="${flex_link_mass / PHI3}"/>
+          <origin rpy="0 0 0" xyz="0 0 0"/>
+          <xacro:cylinder_inertia mass="${flex_link_mass / PHI3}" r="${flex_link_x / PHI3}" l="${flex_link_z / PHI3}"/>
+        </inertial>
+        <collision name="collision_${flex_name}_${flex_id}_roll_link">
+          <geometry>
+            <cylinder radius="${flex_link_x / PHI3 }" length="${flex_link_z / PHI3}"/>
+          </geometry>
+        </collision>
+        <visual name="visual_${flex_name}_${flex_id}_roll_link">
+          <geometry>
+            <cylinder radius="${flex_link_x / PHI3 }" length="${flex_link_z / PHI3}"/>
+          </geometry>
+        </visual>
+      </link>
+
+
+      <transmission name="${flex_name}_${flex_id}_joint_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="${flex_name}_${flex_id}_roll_joint">
+          <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="${flex_name}_${flex_id}_roll_joint_Motor">
+          <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+          <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+      </transmission>
+
+      <!-- PITCH Forwards/Backwards Movement-->
+      <joint name="${flex_name}_${flex_id}_pitch_joint" type="revolute">
+        <parent link="${flex_name}_${flex_id}_roll_link"/>
+        <child link="${flex_name}_${flex_id}_pitch_link"/>
+        <origin xyz="0 0 ${flex_delta_length/PHI3}" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <limit lower="${flex_joint_lim_pitch_low}" upper="${flex_joint_lim_pitch_up}" effort="${flex_joint_effort}" velocity="${flex_joint_vel}"/>
+      </joint>
+
+      <link name="${flex_name}_${flex_id}_pitch_link">
+        <inertial>
+          <mass value="${flex_link_mass / PHI3}"/>
+          <origin rpy="0 0 0" xyz="0 0 0"/>
+          <xacro:cylinder_inertia mass="${flex_link_mass / PHI3}" r="${flex_link_x / PHI3}" l="${flex_link_z / PHI3}"/>
+        </inertial>
+        <collision name="collision_${flex_name}_${flex_id}_pitch_link">
+          <geometry>
+            <cylinder radius="${flex_link_x / PHI3 }" length="${flex_link_z / PHI3}"/>
+          </geometry>
+        </collision>
+        <visual name="visual_${flex_name}_${flex_id}_pitch_link">
+          <geometry>
+            <cylinder radius="${flex_link_x / PHI3 }" length="${flex_link_z / PHI3}"/>
+          </geometry>
+        </visual>
+      </link>
+
+
+      <transmission name="${flex_name}_${flex_id}_joint_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="${flex_name}_${flex_id}_pitch_joint">
+          <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="${flex_name}_${flex_id}_pitch_joint_Motor">
+          <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+          <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+      </transmission>
+
+      <!-- Z Turn Movement Yaw-->
+      <joint name="${flex_name}_${flex_id}_yaw_joint" type="revolute">
+        <parent link="${flex_name}_${flex_id}_pitch_link"/>
+        <child link="${flex_name}_${flex_id}_yaw_link"/>
+        <origin xyz="0 0 ${flex_delta_length/PHI3}" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="${flex_joint_lim_yaw_low}" upper="${flex_joint_lim_yaw_up}" effort="${flex_joint_effort}" velocity="${flex_joint_vel}"/>
+      </joint>
+
+      <link name="${flex_name}_${flex_id}_yaw_link">
+        <inertial>
+          <mass value="${flex_link_mass}"/>
+          <origin rpy="0 0 0" xyz="0 0 0"/>
+          <xacro:box_inertia mass="${flex_link_mass}" x="${flex_link_x}" y="${flex_link_y}" z="${flex_link_z}"/>
+        </inertial>
+        <collision name="collision_${flex_name}_${flex_id}_yaw_link">
+          <geometry>
+            <box size="${flex_link_x}     ${flex_link_y}     ${flex_link_z}"/>
+          </geometry>
+        </collision>
+        <visual name="visual_${flex_name}_${flex_id}_yaw_link">
+          <geometry>
+            <box size="${flex_link_x}     ${flex_link_y}     ${flex_link_z}"/>
+          </geometry>
+        </visual>
+      </link>
+
+
+      <transmission name="${flex_name}_${flex_id}_joint_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="${flex_name}_${flex_id}_yaw_joint">
+          <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="${flex_name}_${flex_id}_yaw_joint_Motor">
+          <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+          <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+      </transmission>
+
+    </xacro:macro >
+
+
+    <xacro:macro name="flex_loop" params="parent_name flex_name parent_link_x parent_link_y parent_link_z items:=^">
+        <xacro:if value="${items}">
+                <!-- pop first item from list -->
+                <xacro:property name="item" value="${items.pop(0)}"/>
+
+                <!-- We check the Integer value , therefore no '' -->
+                <xacro:if value="${item == 1}">
+                  <!-- If its the first flex link, we need to link it to the body-->
+                  <xacro:box_human_flex_joint parent="${parent_name}" flex_name="${flex_name}" flex_id="${item}" displacement="${parent_link_z + flex_delta_length}" flex_link_x="${parent_link_x}" flex_link_y="${parent_link_y}" flex_link_z="${flex_link_length}"/>
+                </xacro:if>
+                <xacro:unless value="${item == 1}">
+                  <!-- If not, we link it to the previous link-->
+                  <xacro:box_human_flex_joint parent="${flex_name}_${item - 1}_yaw_link" flex_name="${flex_name}" flex_id="${item}" displacement="${flex_link_length + flex_delta_length}" flex_link_x="${parent_link_x}" flex_link_y="${parent_link_y}" flex_link_z="${flex_link_length}"/>
+                </xacro:unless>                
+
+                <!-- recursively call myself -->
+                <xacro:flex_loop parent_name="${parent_name}" flex_name="${flex_name}" parent_link_x="${parent_link_x}" parent_link_y="${parent_link_y}" parent_link_z="${parent_link_z}"/>
+        </xacro:if>
+    </xacro:macro>
+
+    
+  
+
+</robot>
