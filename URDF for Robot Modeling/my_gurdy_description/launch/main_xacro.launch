@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <include file="$(find my_gurdy_description)/launch/spawn_gurdy_xacro.launch">
+        <arg name="x" value="0.5" />
+        <arg name="y" value="0.0" />
+        <arg name="z" value="0.18" />
+        <arg name="robot_name" value="gurdy" />
+        <arg name="xacro_file_path" value="$(find my_gurdy_description)/robot/gurdy_extra_leg.xacro" />
+    </include>
+    <include file="$(find my_gurdy_description)/launch/gurdy_control_extra_leg.launch"/>
+</launch>
