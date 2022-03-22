@@ -1,0 +1,10 @@
+<launch>
+
+  <rosparam file="$(find quiz_control)/config/UR5_control.yaml" command="load"/>
+
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+    output="screen" ns="/ur5" args="joint_states shoulder_lift_joint_position_controller shoulder_pan_joint_position_controller 
+    wrist_1_joint_position_controller wrist_2_joint_position_controller wrist_3_joint_position_controller joint_state_controller"/>
+
+
+</launch>
